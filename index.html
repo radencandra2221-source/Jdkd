@@ -1,174 +1,212 @@
-```react
-import React, { useState, useEffect, useRef } from 'react';
-import { Send, Bot, User, Loader2, RefreshCcw, Trash2 } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat Companion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #3b82f6;
+            border-radius: 50%;
+            margin-right: 5px;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+        .chat-container {
+            height: calc(100vh - 180px);
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
 
-// Konfigurasi API (Kunci API ditangani oleh lingkungan eksekusi)
-const apiKey = "";
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-
-const App = () => {
-  const [messages, setMessages] = useState([
-    { role: 'ai', text: 'Halo! Saya asisten AI Anda. Ada yang bisa saya bantu hari ini?' }
-  ]);
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef(null);
-
-  // Scroll otomatis ke pesan terbaru
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  // Fungsi untuk memanggil API Gemini dengan Exponential Backoff
-  const callGeminiAPI = async (userPrompt, retries = 0) => {
-    const systemPrompt = "Anda adalah asisten AI yang ramah, cerdas, dan membantu. Berikan jawaban dalam Bahasa Indonesia yang alami dan mudah dimengerti.";
-    
-    const payload = {
-      contents: [{ parts: [{ text: userPrompt }] }],
-      systemInstruction: { parts: [{ text: systemPrompt }] }
-    };
-
-    try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (response.status === 429 && retries < 5) {
-        const delay = Math.pow(2, retries) * 1000;
-        await new Promise(resolve => setTimeout(resolve, delay));
-        return callGeminiAPI(userPrompt, retries + 1);
-      }
-
-      if (!response.ok) throw new Error('Gagal menghubungi AI');
-
-      const data = await response.json();
-      return data.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, saya tidak bisa memproses permintaan itu.";
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const handleSend = async (e) => {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
-
-    const userMessage = input.trim();
-    setInput('');
-    setMessages(prev => [...prev, { role: 'user', text: userMessage }]);
-    setIsLoading(true);
-
-    try {
-      const aiResponse = await callGeminiAPI(userMessage);
-      setMessages(prev => [...prev, { role: 'ai', text: aiResponse }]);
-    } catch (error) {
-      setMessages(prev => [...prev, { role: 'ai', text: "Maaf, terjadi kesalahan koneksi. Silakan coba lagi nanti.", isError: true }]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const clearChat = () => {
-    if (window.confirm("Hapus semua percakapan?")) {
-      setMessages([{ role: 'ai', text: 'Halo lagi! Mari kita mulai percakapan baru.' }]);
-    }
-  };
-
-  return (
-    <div className="flex flex-col h-screen bg-slate-50 font-sans text-slate-900">
-      {/* Header */}
-      <header className="bg-white border-b px-6 py-4 flex justify-between items-center shadow-sm">
-        <div className="flex items-center gap-2">
-          <div className="bg-indigo-600 p-2 rounded-lg">
-            <Bot size={24} className="text-white" />
-          </div>
-          <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
-            Gemini AI Indonesia
-          </h1>
-        </div>
-        <button 
-          onClick={clearChat}
-          className="p-2 text-slate-400 hover:text-red-500 transition-colors rounded-full hover:bg-red-50"
-          title="Hapus Chat"
-        >
-          <Trash2 size={20} />
-        </button>
-      </header>
-
-      {/* Chat Area */}
-      <main className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6">
-        <div className="max-w-3xl mx-auto space-y-6">
-          {messages.map((msg, index) => (
-            <div 
-              key={index} 
-              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`}
-            >
-              <div className={`flex gap-3 max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center shadow-sm ${
-                  msg.role === 'user' ? 'bg-indigo-600 text-white' : 'bg-white border text-indigo-600'
-                }`}>
-                  {msg.role === 'user' ? <User size={20} /> : <Bot size={20} />}
+    <!-- Header -->
+    <header class="bg-white border-b sticky top-0 z-10 p-4 shadow-sm">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-blue-600 p-2 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
                 </div>
-                <div className={`p-4 rounded-2xl shadow-sm leading-relaxed ${
-                  msg.role === 'user' 
-                    ? 'bg-indigo-600 text-white rounded-tr-none' 
-                    : msg.isError 
-                      ? 'bg-red-50 border border-red-100 text-red-700 rounded-tl-none'
-                      : 'bg-white border border-slate-200 text-slate-800 rounded-tl-none'
-                }`}>
-                  <p className="whitespace-pre-wrap">{msg.text}</p>
+                <h1 class="text-xl font-bold tracking-tight text-slate-800">Asisten AI Cerdas</h1>
+            </div>
+            <span class="text-xs font-medium text-green-600 bg-green-100 px-2 py-1 rounded-full uppercase">Gemini 2.5 Flash</span>
+        </div>
+    </header>
+
+    <!-- Chat Area -->
+    <main class="max-w-4xl mx-auto p-4">
+        <div id="chat-box" class="chat-container overflow-y-auto space-y-4 pb-4 pr-2">
+            <!-- Pesan Sambutan -->
+            <div class="flex justify-start">
+                <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-none p-4 max-w-[85%] shadow-sm">
+                    <p class="text-sm leading-relaxed">Halo! Saya adalah AI asisten Anda. Silakan tanyakan apa saja, saya akan mencoba menjawab dengan nyambung dan akurat.</p>
                 </div>
-              </div>
             </div>
-          ))}
-          
-          {isLoading && (
-            <div className="flex justify-start animate-pulse">
-              <div className="flex gap-3 items-center text-slate-400 italic bg-white border px-4 py-2 rounded-full shadow-sm">
-                <Loader2 size={16} className="animate-spin" />
-                <span>AI sedang berpikir...</span>
-              </div>
-            </div>
-          )}
-          <div ref={messagesEndRef} />
         </div>
-      </main>
+    </main>
 
-      {/* Input Area */}
-      <footer className="bg-white border-t p-4 md:p-6">
-        <div className="max-w-3xl mx-auto">
-          <form onSubmit={handleSend} className="relative group">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ketik pesan Anda di sini..."
-              disabled={isLoading}
-              className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 pl-6 pr-14 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all disabled:opacity-50"
-            />
-            <button
-              type="submit"
-              disabled={!input.trim() || isLoading}
-              className="absolute right-2 top-2 bottom-2 bg-indigo-600 text-white px-4 rounded-xl hover:bg-indigo-700 disabled:bg-slate-300 transition-all flex items-center justify-center"
-            >
-              {isLoading ? <Loader2 size={20} className="animate-spin" /> : <Send size={20} />}
-            </button>
-          </form>
-          <p className="text-center text-xs text-slate-400 mt-4">
-            Didukung oleh Google Gemini 2.5 Flash • Respon AI mungkin tidak selalu akurat.
-          </p>
+    <!-- Input Area -->
+    <footer class="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
+        <div class="max-w-4xl mx-auto">
+            <form id="chat-form" class="flex items-center space-x-2">
+                <textarea 
+                    id="user-input" 
+                    rows="1" 
+                    class="flex-1 bg-slate-100 border-none rounded-2xl px-4 py-3 focus:ring-2 focus:ring-blue-500 resize-none outline-none text-sm"
+                    placeholder="Ketik pertanyaan Anda di sini..."
+                    required
+                ></textarea>
+                <button 
+                    type="submit" 
+                    id="send-btn"
+                    class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-2xl transition-colors duration-200 disabled:opacity-50"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                    </svg>
+                </button>
+            </form>
+            <p class="text-[10px] text-center text-slate-400 mt-2">AI dapat membuat kesalahan. Harap periksa informasi penting.</p>
         </div>
-      </footer>
-    </div>
-  );
-};
+    </footer>
 
-export default App;
+    <script>
+        // API Configuration
+        const apiKey = ""; // Kunci akan disediakan oleh environment runtime
+        const modelName = "gemini-2.5-flash-preview-09-2025";
+        
+        const chatBox = document.getElementById('chat-box');
+        const chatForm = document.getElementById('chat-form');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
 
-```
-                  
+        // Fungsi untuk menambahkan pesan ke UI
+        function appendMessage(role, text) {
+            const wrapper = document.createElement('div');
+            wrapper.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'}`;
+            
+            const content = document.createElement('div');
+            content.className = role === 'user' 
+                ? 'bg-blue-600 text-white rounded-2xl rounded-tr-none p-4 max-w-[85%] shadow-sm'
+                : 'bg-white border border-slate-200 rounded-2xl rounded-tl-none p-4 max-w-[85%] shadow-sm';
+            
+            const messageText = document.createElement('p');
+            messageText.className = 'text-sm leading-relaxed';
+            messageText.innerText = text;
+            
+            content.appendChild(messageText);
+            wrapper.appendChild(content);
+            chatBox.appendChild(wrapper);
+            
+            // Scroll ke bawah
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Fungsi Loading Indicator
+        function showLoading() {
+            const loader = document.createElement('div');
+            loader.id = 'ai-loading';
+            loader.className = 'flex justify-start';
+            loader.innerHTML = `
+                <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-none p-4 shadow-sm flex items-center">
+                    <div class="typing-indicator">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
+            `;
+            chatBox.appendChild(loader);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function removeLoading() {
+            const loader = document.getElementById('ai-loading');
+            if (loader) loader.remove();
+        }
+
+        // Exponential Backoff Fetch
+        async function fetchWithRetry(url, options, maxRetries = 5) {
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.ok) return await response.json();
+                    
+                    if (response.status === 429 || response.status >= 500) {
+                        const delay = Math.pow(2, i) * 1000;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        continue;
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                } catch (err) {
+                    if (i === maxRetries - 1) throw err;
+                }
+            }
+        }
+
+        // Form Submission
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const prompt = userInput.value.trim();
+            if (!prompt) return;
+
+            // Update UI User
+            appendMessage('user', prompt);
+            userInput.value = '';
+            userInput.style.height = 'auto';
+            
+            // Start Loading
+            sendBtn.disabled = true;
+            showLoading();
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{
+                    parts: [{ text: prompt }]
+                }],
+                systemInstruction: {
+                    parts: [{ text: "Anda adalah asisten AI yang ramah dan cerdas. Jawablah dalam Bahasa Indonesia yang alami dan mudah dimengerti." }]
+                }
+            };
+
+            try {
+                const data = await fetchWithRetry(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, saya tidak bisa memproses permintaan tersebut.";
+                removeLoading();
+                appendMessage('ai', aiResponse);
+
+            } catch (error) {
+                console.error(error);
+                removeLoading();
+                appendMessage('ai', "Sistem sedang sibuk atau terjadi kesalahan koneksi. Silakan coba beberapa saat lagi.");
+            } finally {
+                sendBtn.disabled = false;
+            }
+        });
+
+        // Auto-resize textarea
+        userInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    </script>
+</body>
+</html>
