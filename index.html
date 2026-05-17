@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Workspace - Interactive Assistant</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Highlight.js untuk pewarnaan kode -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #09090b;
+            color: #fafafa;
+        }
+
+        .chat-container {
+            height: calc(100vh - 160px);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #3f3f46;
+        }
+
+        .bubble-ai {
+            border-radius: 16px 16px 16px 4px;
+        }
+
+        .bubble-user {
+            border-radius: 16px 16px 4px 16px;
+        }
+
+        .message-animate {
+            animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dot-pulse {
+            animation: pulse-animation 1.4s infinite ease-in-out both;
+        }
+
+        @keyframes pulse-animation {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+            40% { transform: scale(1.1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <header class="border-b border-zinc-800 bg-zinc-950/60 backdrop-blur-md p-4 sticky top-0 z-40">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-bold text-zinc-100 tracking-tight text-sm md:text-base">AI Assistant</h1>
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                        <span class="text-[10px] font-bold text-emerald-400 tracking-wider uppercase">Sistem Aktif</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Header Action Buttons -->
+            <div class="flex items-center gap-2">
+                <!-- Tombol Bersihkan Riwayat Chat -->
+                <button onclick="clearChatHistory()" class="text-zinc-500 hover:text-red-400 transition-colors p-2 rounded-lg hover:bg-zinc-900" title="Bersihkan Chat">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                </button>
+                
+                <!-- Tombol Hamburger (Buka Tim Pengembang) -->
+                <button onclick="toggleSidebar(true)" class="text-zinc-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-zinc-900" title="Tim Pengembang">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Overlay Latar Belakang Sidebar (Backdrop) -->
+    <div id="sidebarOverlay" onclick="toggleSidebar(false)" class="fixed inset-0 bg-black/60 z-40 hidden transition-opacity duration-300 opacity-0 pointer-events-none"></div>
+
+    <!-- Sidebar Tim Developer (Drawer Slide-out dari Kanan) -->
+    <aside id="devSidebar" class="fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-zinc-900 border-l border-zinc-800 z-50 transform translate-x-full transition-transform duration-300 flex flex-col shadow-2xl">
+        <!-- Sidebar Header -->
+        <div class="p-4 border-b border-zinc-800 flex items-center justify-between bg-zinc-950/40">
+            <div>
+                <h2 class="text-sm font-bold text-zinc-200 uppercase tracking-widest">Tim Pengembang</h2>
+                <p class="text-[10px] text-zinc-500 mt-0.5">Sosok di balik asisten pintar ini</p>
+            </div>
+            <button onclick="toggleSidebar(false)" class="text-zinc-500 hover:text-white transition-colors p-2 rounded-lg hover:bg-zinc-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Sidebar Body (Scrollable Profile Cards) -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
+            <!-- Developer 1: Dicky Candra -->
+            <div class="flex gap-3 items-start p-3 bg-zinc-950/40 rounded-xl border border-zinc-800/50 hover:border-blue-500/30 transition-all">
+                <div class="w-8 h-8 rounded-lg bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-xs flex-shrink-0">
+                    DC
+                </div>
+                <div>
+                    <h3 class="text-xs font-bold text-zinc-100">Dicky Candra</h3>
+                    <span class="text-[9px] text-blue-400 font-semibold tracking-wide uppercase">AI Integration Specialist</span>
+                    <p class="text-[11px] text-zinc-400 mt-1 leading-relaxed">Spesialis dalam integrasi AI Core, konfigurasi prompt sistem, dan optimalisasi pipeline Gemini API.</p>
+                </div>
+            </div>
+
+            <!-- Developer 2: Putra Dicko -->
+            <div class="flex gap-3 items-start p-3 bg-zinc-950/40 rounded-xl border border-zinc-800/50 hover:border-purple-500/30 transition-all">
+                <div class="w-8 h-8 rounded-lg bg-purple-600/10 border border-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-xs flex-shrink-0">
+                    PD
+                </div>
+                <div>
+                    <h3 class="text-xs font-bold text-zinc-100">Putra Dicko</h3>
+                    <span class="text-[9px] text-purple-400 font-semibold tracking-wide uppercase">Speech & UI Engineer</span>
+                    <p class="text-[11px] text-zinc-400 mt-1 leading-relaxed">Pakar dalam rekayasa sintesis suara (Web TTS), tata letak interaktif, dan rendering visual kode dinamis.</p>
+                </div>
+            </div>
+
+            <!-- Developer 3: Volta Ghiandra Saputra -->
+            <div class="flex gap-3 items-start p-3 bg-zinc-950/40 rounded-xl border border-zinc-800/50 hover:border-emerald-500/30 transition-all">
+                <div class="w-8 h-8 rounded-lg bg-emerald-600/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold text-xs flex-shrink-0">
+                    VG
+                </div>
+                <div>
+                    <h3 class="text-xs font-bold text-zinc-100">Volta Ghiandra Saputra</h3>
+                    <span class="text-[9px] text-emerald-400 font-semibold tracking-wide uppercase">Backend Architect</span>
+                    <p class="text-[11px] text-zinc-400 mt-1 leading-relaxed">Membangun arsitektur server backend, pengamanan sistem API eksternal, dan pengelolaan database real-time.</p>
+                </div>
+            </div>
+
+            <!-- Developer 4: Miftahul Khoirul Jannah -->
+            <div class="flex gap-3 items-start p-3 bg-zinc-950/40 rounded-xl border border-zinc-800/50 hover:border-pink-500/30 transition-all">
+                <div class="w-8 h-8 rounded-lg bg-pink-600/10 border border-pink-500/20 flex items-center justify-center text-pink-400 font-bold text-xs flex-shrink-0">
+                    MK
+                </div>
+                <div>
+                    <h3 class="text-xs font-bold text-zinc-100">Miftahul Khoirul Jannah</h3>
+                    <span class="text-[9px] text-pink-400 font-semibold tracking-wide uppercase">UI/UX Designer</span>
+                    <p class="text-[11px] text-zinc-400 mt-1 leading-relaxed">Merancang antarmuka pengguna yang modern, merancang desain visual responsif, dan memastikan pengalaman interaksi optimal.</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Chat Display Area (Main Layout) -->
+    <main id="chatDisplay" class="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 max-w-4xl w-full mx-auto chat-container custom-scrollbar">
+        <!-- Sambutan Awal Sederhana -->
+        <div class="flex items-start gap-3 max-w-[85%] message-animate">
+            <div class="w-8 h-8 rounded-lg bg-zinc-850 border border-zinc-800 flex items-center justify-center text-zinc-400 flex-shrink-0 text-xs font-bold">
+                AI
+            </div>
+            <div class="flex flex-col">
+                <div class="bg-zinc-900 border border-zinc-800/80 p-4 bubble-ai text-zinc-200 shadow-md">
+                    <p class="text-sm md:text-base leading-relaxed">Halo! Saya asisten AI Anda. Ada yang bisa saya bantu hari ini? 😊</p>
+                </div>
+                <span class="text-[10px] text-zinc-500 mt-1.5 ml-1">Asisten AI</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- Input Form -->
+    <div class="p-4 bg-gradient-to-t from-zinc-950 to-transparent sticky bottom-0">
+        <div class="max-w-4xl mx-auto">
+            <form id="chatForm" class="relative flex items-center bg-zinc-900 border border-zinc-800 rounded-2xl p-1.5 shadow-2xl focus-within:ring-2 focus-within:ring-blue-600 focus-within:border-transparent transition-all">
+                <input 
+                    type="text" 
+                    id="userInput" 
+                    placeholder="Tulis pertanyaan Anda di sini..." 
+                    class="flex-1 bg-transparent border-none text-white focus:outline-none placeholder:text-zinc-650 text-sm md:text-base py-3 px-4"
+                    autocomplete="off"
+                    required
+                >
+                <button 
+                    type="submit" 
+                    id="sendBtn"
+                    class="bg-blue-600 hover:bg-blue-500 text-white p-3 rounded-xl transition-all active:scale-95 flex-shrink-0 shadow-lg shadow-blue-500/20"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const apiKey = ""; // Kunci otomatis disuntikkan sistem saat runtime
+        const chatDisplay = document.getElementById('chatDisplay');
+        const chatForm = document.getElementById('chatForm');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const devSidebar = document.getElementById('devSidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        // Memori riwayat percakapan agar respon selalu nyambung
+        let conversationHistory = [];
+
+        // --- Fitur Suara Lantang (Text-To-Speech) ---
+        function speakLoudly(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Hentikan suara yang sedang berjalan jika ada
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'id-ID';
+                utterance.rate = 1.0;
+                utterance.pitch = 1.1; // Nada tegas dan lantang
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // --- Filter Pembersih Tanda Bintang Ganda (**) ---
+        function removeAsterisks(text) {
+            return text.replace(/\*\*/g, '');
+        }
+
+        // --- Drawer / Sidebar Control (Tim Pengembang) ---
+        function toggleSidebar(open) {
+            if (open) {
+                devSidebar.classList.remove('translate-x-full');
+                devSidebar.classList.add('translate-x-0');
+                sidebarOverlay.classList.remove('hidden', 'pointer-events-none');
+                setTimeout(() => {
+                    sidebarOverlay.classList.add('opacity-100');
+                }, 10);
+            } else {
+                devSidebar.classList.add('translate-x-full');
+                devSidebar.classList.remove('translate-x-0');
+                sidebarOverlay.classList.remove('opacity-100');
+                sidebarOverlay.classList.add('pointer-events-none');
+                setTimeout(() => {
+                    sidebarOverlay.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // --- Salin Kode ---
+        function copyToClipboard(btn, codeText) {
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeText;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            try {
+                document.execCommand('copy');
+                btn.innerText = 'Tersalin!';
+                btn.classList.add('bg-emerald-600', 'text-white');
+                setTimeout(() => {
+                    btn.innerText = 'Salin Kode';
+                    btn.classList.remove('bg-emerald-600', 'text-white');
+                }, 2000);
+            } catch (err) {
+                btn.innerText = 'Gagal!';
+            }
+            document.body.removeChild(tempTextArea);
+        }
+
+        // --- Menambahkan Pesan ke Antarmuka ---
+        function appendMessage(content, isUser = false) {
+            const wrapper = document.createElement('div');
+            wrapper.className = `flex items-start gap-3 max-w-[85%] message-animate ${isUser ? 'ml-auto justify-end' : ''}`;
+
+            const icon = document.createElement('div');
+            icon.className = `w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0 ${
+                isUser 
+                ? 'bg-blue-600 text-white order-2' 
+                : 'bg-zinc-850 text-zinc-400 border border-zinc-800'
+            }`;
+            icon.textContent = isUser ? 'U' : 'AI';
+
+            const messageDetails = document.createElement('div');
+            messageDetails.className = 'flex flex-col';
+
+            const bubble = document.createElement('div');
+            bubble.className = `p-4 shadow-lg border text-sm md:text-base leading-relaxed ${
+                isUser 
+                ? 'bg-blue-600/10 border-blue-500/20 bubble-user text-blue-100' 
+                : 'bg-zinc-900 border border-zinc-800/80 bubble-ai text-zinc-200'
+            }`;
+
+            // Filter karakter bintang ganda dari konten
+            const cleanedContent = removeAsterisks(content);
+
+            // Deteksi dan Format Blok Kode
+            if (!isUser && cleanedContent.includes('```')) {
+                const parts = cleanedContent.split('```');
+                bubble.innerHTML = '';
+                
+                parts.forEach((part, index) => {
+                    if (index % 2 === 0) {
+                        // Teks biasa
+                        if (part.trim()) {
+                            const p = document.createElement('p');
+                            p.className = "whitespace-pre-wrap mb-2";
+                            p.textContent = part;
+                            bubble.appendChild(p);
+                        }
+                    } else {
+                        // Bagian Blok Kode
+                        const lines = part.split('\n');
+                        const language = lines[0].trim() || 'code';
+                        const codeString = lines.slice(1).join('\n').trim();
+
+                        const codeContainer = document.createElement('div');
+                        codeContainer.className = "my-4 rounded-xl overflow-hidden border border-zinc-800 shadow-xl bg-zinc-950";
+
+                        const codeHeader = document.createElement('div');
+                        codeHeader.className = "bg-zinc-900/80 px-4 py-2 flex items-center justify-between border-b border-zinc-850";
+                        codeHeader.innerHTML = `<span class="text-xs font-bold text-zinc-400 uppercase tracking-wider">${language}</span>`;
+                        
+                        const copyBtn = document.createElement('button');
+                        copyBtn.className = "text-[10px] font-bold text-blue-400 hover:text-white bg-zinc-800/50 px-2.5 py-1 rounded transition-all";
+                        copyBtn.innerText = "Salin Kode";
+                        copyBtn.onclick = () => copyToClipboard(copyBtn, codeString);
+                        
+                        codeHeader.appendChild(copyBtn);
+                        codeContainer.appendChild(codeHeader);
+
+                        const pre = document.createElement('pre');
+                        pre.className = "p-4 overflow-x-auto custom-scrollbar";
+                        
+                        const codeElement = document.createElement('code');
+                        codeElement.className = `language-${language} text-xs md:text-sm`;
+                        codeElement.textContent = codeString;
+
+                        pre.appendChild(codeElement);
+                        codeContainer.appendChild(pre);
+                        bubble.appendChild(codeContainer);
+
+                        // Highlight kode secara instan
+                        hljs.highlightElement(codeElement);
+                    }
+                });
+            } else {
+                bubble.innerHTML = `<p class="whitespace-pre-wrap">${cleanedContent}</p>`;
+            }
+
+            const timestamp = document.createElement('span');
+            timestamp.className = `text-[10px] text-zinc-500 mt-1.5 ${isUser ? 'mr-1 text-right' : 'ml-1'}`;
+            timestamp.textContent = isUser ? 'Anda' : 'Asisten AI';
+
+            messageDetails.appendChild(bubble);
+            messageDetails.appendChild(timestamp);
+
+            wrapper.appendChild(icon);
+            wrapper.appendChild(messageDetails);
+            chatDisplay.appendChild(wrapper);
+
+            chatDisplay.scrollTo({ top: chatDisplay.scrollHeight, behavior: 'smooth' });
+        }
+
+        // --- Animasi Berpikir (Loading Indicator) ---
+        function showLoadingIndicator() {
+            const id = 'loader-' + Date.now();
+            const wrapper = document.createElement('div');
+            wrapper.id = id;
+            wrapper.className = "flex items-st
