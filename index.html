@@ -3,475 +3,507 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>⚡ HYPERMYTHIC | Roblox Cheat Suite ⚡</title>
+    <title>MLBB Tools • Cheat Module + Server Engine</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none; /* efek "cheat tool" */
+            user-select: none;
         }
 
         body {
-            min-height: 100vh;
-            background: radial-gradient(circle at 20% 30%, #0a0f1e, #03060c);
-            font-family: 'Poppins', 'Segoe UI', 'Orbitron', monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: linear-gradient(145deg, #0a0f1e 0%, #0c1222 100%);
+            font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
             padding: 20px;
+            min-height: 100vh;
+            color: #eee;
         }
 
-        /* efek glitch / high-tech */
-        .cheat-container {
-            max-width: 550px;
-            width: 100%;
-            background: rgba(10, 20, 30, 0.75);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 255, 255, 0.4);
-            border-radius: 48px;
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.3);
-            padding: 1.8rem 1.5rem 2.2rem;
-            transition: all 0.2s ease;
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e2a3a;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f0b90b;
+            border-radius: 10px;
         }
 
-        /* header mythic */
-        .cheat-header {
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
             text-align: center;
-            margin-bottom: 1.8rem;
+            margin-bottom: 30px;
         }
-        .cheat-header h1 {
-            font-size: 2rem;
-            background: linear-gradient(135deg, #ffd966, #ff884d, #ff3a6f);
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #FFD966, #FF9F4A);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 0 8px rgba(255, 60, 100, 0.5);
-            letter-spacing: 2px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
-        .badge-mythic {
+        .badge {
+            background: #1f2a3e;
             display: inline-block;
-            background: #000000aa;
-            border: 1px solid #f0a;
-            border-radius: 40px;
             padding: 5px 15px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: #ff66cc;
-            margin-top: 8px;
-            backdrop-filter: blur(4px);
+            border-radius: 40px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            border: 1px solid #f0b90b55;
         }
-        .warning-sim {
-            font-size: 0.7rem;
-            color: #ffcc88;
-            margin-top: 8px;
-            background: #0a121ccc;
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
+        .disclaimer {
+            background: #1e1a2faa;
+            border-left: 4px solid #ffaa44;
+            padding: 10px 15px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-top: 12px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        /* jarak slider */
-        .distance-panel {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 2rem;
-            padding: 20px 18px;
-            margin-bottom: 2rem;
-            border: 1px solid #2affb6;
-            box-shadow: 0 0 8px #2affb66f;
+        .server-module {
+            background: rgba(18, 25, 45, 0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(240, 185, 11, 0.3);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
         }
-        .distance-label {
+        .server-header {
             display: flex;
             justify-content: space-between;
-            font-weight: bold;
-            margin-bottom: 12px;
-            color: #b5ffec;
-            font-family: monospace;
-            font-size: 1rem;
-        }
-        .distance-value {
-            background: #021018;
-            padding: 5px 15px;
-            border-radius: 30px;
-            font-family: 'Orbitron', monospace;
-            color: #0fefef;
-            font-weight: bold;
-            font-size: 1.5rem;
-            text-align: center;
-            margin-top: 8px;
-        }
-        input[type="range"] {
-            width: 100%;
-            height: 6px;
-            -webkit-appearance: none;
-            background: linear-gradient(90deg, #00c6ff, #f0f, #ff3a00);
-            border-radius: 10px;
-            outline: none;
-            cursor: pointer;
-        }
-        input[type="range"]:focus {
-            outline: none;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 22px;
-            height: 22px;
-            background: #ffffff;
-            border-radius: 50%;
-            border: 2px solid cyan;
-            box-shadow: 0 0 8px cyan;
-            cursor: pointer;
-        }
-
-        /* damage type button */
-        .action-buttons {
-            display: flex;
-            gap: 18px;
-            margin-bottom: 2rem;
-            justify-content: center;
+            align-items: center;
             flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 1px solid #2a3550;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
         }
-        .cheat-btn {
-            background: linear-gradient(145deg, #11171f, #03070c);
-            border: 2px solid rgba(0, 255, 200, 0.6);
-            border-radius: 60px;
-            padding: 14px 28px;
-            font-weight: bold;
-            font-size: 1.2rem;
-            font-family: 'Orbitron', monospace;
-            color: #0ff;
-            cursor: pointer;
-            transition: 0.1s linear;
-            box-shadow: 0 5px 0 #001122;
-            flex: 1;
-            text-align: center;
+        .server-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        .cheat-btn:active {
-            transform: translateY(3px);
-            box-shadow: 0 2px 0 #001122;
-        }
-        .btn-close {
-            background: linear-gradient(145deg, #1f1018, #2a0a1a);
-            border-color: #ff4080;
-            color: #ff77aa;
-        }
-        .btn-auto {
-            background: linear-gradient(145deg, #002c2c, #001a1a);
-            border-color: #ffcc44;
-            color: #ffff88;
-        }
-
-        /* console damage log */
-        .damage-log {
-            background: #03070cee;
-            border-radius: 24px;
-            padding: 15px;
-            margin-top: 20px;
-            border-left: 6px solid #f0f;
-            font-family: 'Courier New', monospace;
-        }
-        .log-title {
-            font-size: 0.8rem;
-            color: #aaecff;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
+        .status {
             display: flex;
             align-items: center;
             gap: 8px;
+            background: #0a0f1c;
+            padding: 6px 14px;
+            border-radius: 100px;
+        }
+        .led {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff5555;
+            box-shadow: 0 0 6px #ff5555;
+            transition: all 0.2s;
+        }
+        .led.active {
+            background: #2eff7a;
+            box-shadow: 0 0 12px #2eff7a;
+        }
+        .server-stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+        }
+        .stat {
+            background: #101624;
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        .cheat-card {
+            background: #111827cc;
+            backdrop-filter: blur(4px);
+            border-radius: 24px;
+            padding: 18px;
+            border: 1px solid #2a374f;
+            transition: 0.2s;
+        }
+        .cheat-card:hover {
+            border-color: #f0b90b;
+            transform: translateY(-3px);
+        }
+        .cheat-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .toggle {
+            width: 48px;
+            height: 24px;
+            background: #2c3e55;
+            border-radius: 40px;
+            position: relative;
+            cursor: pointer;
+        }
+        .toggle.active {
+            background: #f0b90b;
+        }
+        .toggle-knob {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 3px;
+            transition: 0.2s;
+        }
+        .toggle.active .toggle-knob {
+            left: 25px;
+        }
+        .desc {
+            font-size: 0.8rem;
+            color: #aab3cf;
+            margin: 12px 0;
+        }
+        .slider-container {
+            margin-top: 12px;
+        }
+        input[type="range"] {
+            width: 100%;
+            background: #1f2a40;
+            height: 4px;
+            border-radius: 5px;
+            -webkit-appearance: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #f0b90b;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .value-label {
+            font-size: 0.7rem;
+            text-align: right;
+            display: block;
+        }
+        button.action-btn {
+            background: #1f2a48;
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 40px;
+            margin-top: 12px;
+            width: 100%;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        button.action-btn:hover {
+            background: #f0b90b;
+            color: #0a0f1e;
         }
         .log-area {
-            background: #000000aa;
-            border-radius: 18px;
-            padding: 12px;
-            height: 160px;
-            overflow-y: auto;
-            font-size: 0.8rem;
-            color: #b3ffcf;
-        }
-        .log-entry {
-            border-bottom: 1px solid #1a4450;
-            padding: 6px 0;
-            font-family: monospace;
-        }
-        .highlight-damage {
-            color: #ff7e5e;
-            font-weight: bold;
-            text-shadow: 0 0 3px red;
-        }
-        .mode-indicator {
-            background: #0e1a1f;
-            border-radius: 24px;
-            padding: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 0.8rem;
-            color: cyan;
-        }
-        footer {
-            text-align: center;
-            font-size: 0.65rem;
-            color: #3a6a7a;
-            margin-top: 20px;
-        }
-        button {
-            background: none;
-            border: none;
-        }
-        .glow-text {
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { opacity: 0.7; text-shadow: 0 0 0px cyan;}
-            100% { opacity: 1; text-shadow: 0 0 4px cyan;}
-        }
-        .damage-stat {
-            font-size: 0.75rem;
-            background: #00000066;
+            background: #070b14;
             border-radius: 20px;
-            padding: 5px 10px;
-            display: inline-block;
+            padding: 16px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .log-title {
+            margin-bottom: 10px;
+            font-weight: bold;
+            border-left: 3px solid #f0b90b;
+            padding-left: 10px;
+        }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            flex-direction: column;
+            gap: 20px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+        }
+        .loading-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #2c3e55;
+            border-top: 6px solid #f0b90b;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @media (max-width: 700px) {
+            .header h1 { font-size: 1.8rem; }
+            .server-header { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
 <body>
-<div class="cheat-container">
-    <div class="cheat-header">
-        <h1>✦ HYPERMYTHIC CHEAT ✦</h1>
-        <div class="badge-mythic">⚡ ROBLOX | HYPERSHOT | MYTHIC EDITION ⚡</div>
-        <div class="warning-sim">⚡ MYTHIC ACTIVE • FULL DAMAGE CONTROL ⚡</div>
+<div class="container">
+    <div class="header">
+        <h1>⚡ MLBB TOOLS • GOD ENGINE</h1>
+        <div class="badge">🔒 FULL CHEAT MODULE | SERVER INTEGRATED</div>
+        <div class="disclaimer">⚠️ Peringatan: Hanya untuk keperluan antarmuka. Hormati ketentuan game.</div>
     </div>
 
-    <!-- kontrol jarak utama -->
-    <div class="distance-panel">
-        <div class="distance-label">
-            <span>🔫 JARAK TARGET :</span>
-            <span>📏 meter</span>
+    <div class="server-module" id="serverModule">
+        <div class="server-header">
+            <div class="server-title">
+                <i>🖥️</i>
+                <h3>Module Server • Core Engine</h3>
+            </div>
+            <div class="status" id="serverStatusBlock">
+                <span class="led" id="serverLed"></span>
+                <span id="serverStatusText">Offline</span>
+            </div>
         </div>
-        <input type="range" id="distanceSlider" min="0" max="300" value="75" step="1">
-        <div class="distance-value">
-            <span id="distanceDisplay">75</span> m
+        <div class="server-stats">
+            <div class="stat">🔌 Port: 3030 (secure tunnel)</div>
+            <div class="stat">📡 Latency: <span id="pingValue">0</span> ms</div>
+            <div class="stat">⚙️ Workers: 4 threads</div>
+            <div class="stat">📦 Cheat API: v2.6.9</div>
         </div>
-        <div class="damage-stat" style="margin-top: 12px; display: flex; justify-content: space-between;">
-            <span>💥 DAMAGE CLOSE: <strong style="color:#ffaa55">130-210</strong></span>
-            <span>💢 DAMAGE FAR: <strong style="color:#88ffaa">85-155</strong></span>
+        <div style="display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap;">
+            <button id="startServerBtn" class="action-btn" style="width: auto; background: #2a6b47;">🚀 Start Server Engine</button>
+            <button id="stopServerBtn" class="action-btn" style="width: auto; background: #6b2e2e;">⏹️ Stop Server</button>
+            <button id="injectAllBtn" class="action-btn" style="width: auto; background: #f0b90b; color:#0a0f1e;">💉 Inject All Cheats</button>
         </div>
     </div>
 
-    <!-- mode + fitur -->
-    <div class="mode-indicator" id="modeText">
-        🧬 MODE MYTHIC ACTIVE : DAMAGE TERGANTUNG JARAK (OTOMATIS SCALE)
-    </div>
+    <div class="tools-grid" id="toolsGrid"></div>
 
-    <div class="action-buttons">
-        <button class="cheat-btn" id="btnCloseRange">⚡ DEKAT ⚡</button>
-        <button class="cheat-btn btn-auto" id="btnFarRange">🌠 JAUH 🌠</button>
-        <button class="cheat-btn btn-close" id="btnCustomRange">🎯 DAMAGE SEKARANG 🎯</button>
+    <div class="log-area">
+        <div class="log-title">📋 SERVER CONSOLE & CHEAT LOGS</div>
+        <div id="logMessages">[System] Tools siap. Server Engine standby.<br></div>
     </div>
+</div>
 
-    <!-- log damage & riwayat -->
-    <div class="damage-log">
-        <div class="log-title">
-            <span>📟 [ MYTHIC DAMAGE LOG ]</span>
-            <span style="font-size:10px;">● REAL-TIME HIT</span>
-        </div>
-        <div class="log-area" id="logMessages">
-            <div class="log-entry">✨ HYPERMYTHIC ACTIVE — siap menghantam jarak dekat & jauh ✨</div>
-            <div class="log-entry">🎯 geser slider jarak atau tekan tombol spesial</div>
-        </div>
-        <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
-            <button id="clearLogBtn" style="background:#111e24; border:none; padding:4px 12px; border-radius:20px; color:#6f9fbf; font-size:11px; cursor:pointer;">🗑️ Bersihkan Log</button>
-        </div>
-    </div>
-    <footer>
-        ⚡ HYPERMYTHIC CHEAT SUITE | ROBLOX INTEGRATED ⚡<br>
-        * Jarak dekat (0-50m) damage max | Jarak menengah (51-150m) damage medium | Jarak jauh (151-300m) damage lebih rendah
-    </footer>
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner"></div>
+    <div>🚀 ENGINE LOADING<br><span style="font-size: 0.9rem;">Memulai server & menginjeksi cheat...</span></div>
 </div>
 
 <script>
-    (function() {
-        // Elemen DOM
-        const slider = document.getElementById('distanceSlider');
-        const distanceSpan = document.getElementById('distanceDisplay');
-        const btnClose = document.getElementById('btnCloseRange');
-        const btnFar = document.getElementById('btnFarRange');
-        const btnCustom = document.getElementById('btnCustomRange');
-        const logContainer = document.getElementById('logMessages');
-        const clearBtn = document.getElementById('clearLogBtn');
+    // DAFTAR CHEAT (tanpa ESP, Aimbot, MapHack, EnemySkillIndicator, Teleport, DroneView)
+    const cheatList = [
+        { id: "dmgMulti", name: "Damage Multiplier", desc: "Lipat ganda damage (x1 - x5)", type: "slider", min: 1, max: 5, step: 0.1, defaultVal: 1 },
+        { id: "cdSpam", name: "No Cooldown", desc: "Skill & battle spell tanpa cooldown", type: "toggle", defaultValue: false },
+        { id: "speedHack", name: "Speed Hack", desc: "Kecepatan gerak +50% sampai 300%", type: "slider", min: 100, max: 300, step: 10, defaultVal: 100, unit: "%" },
+        { id: "antiban", name: "Anti-Ban Shield", desc: "Evade deteksi sistem", type: "toggle", defaultValue: false },
+        { id: "autoLastHit", name: "Auto Last Hit", desc: "Last hit otomatis minion/jungle", type: "toggle", defaultValue: false },
+        { id: "jungleTimer", name: "Jungle Timer Advanced", desc: "Timer respon buff & lord", type: "toggle", defaultValue: false },
+        { id: "regenBoost", name: "Regeneration Boost", desc: "HP/Regen 2x lipat", type: "toggle", defaultValue: false },
+        { id: "ccImmunity", name: "CC Immunity", desc: "Kebal crowd control", type: "toggle", defaultValue: false }
+    ];
 
-        // Fungsi untuk menambah log damage
-        function addDamageLog(distanceVal, damageDealt, rangeType, extra = '') {
-            const logDiv = document.createElement('div');
-            logDiv.className = 'log-entry';
-            const timestamp = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute:'2-digit', second:'2-digit' });
-            let rangeIcon = (rangeType === 'DEKAT') ? '🔴⚡' : (rangeType === 'JAUH') ? '🔵✨' : '💠🎯';
-            logDiv.innerHTML = `<span style="color:#9bc4d0;">[${timestamp}]</span> ${rangeIcon} <strong style="color:#fff;">[${rangeType}]</strong> Jarak: <span style="color:#00ffc3;">${distanceVal}m</span> → 💥 DAMAGE: <span class="highlight-damage">${damageDealt}</span> HP ${extra ? '('+extra+')' : ''}`;
-            logContainer.appendChild(logDiv);
-            logContainer.scrollTop = logContainer.scrollHeight;
+    let toolsState = {};
+    let serverActive = false;
+    let pingInterval = null;
+
+    cheatList.forEach(cheat => {
+        if (cheat.type === "toggle") toolsState[cheat.id] = cheat.defaultValue;
+        else if (cheat.type === "slider") toolsState[cheat.id] = cheat.defaultVal;
+    });
+
+    function addLog(message, type = "info") {
+        const logDiv = document.getElementById("logMessages");
+        const time = new Date().toLocaleTimeString();
+        const prefix = type === "error" ? "❌" : (type === "success" ? "✅" : "🔹");
+        logDiv.innerHTML += `[${time}] ${prefix} ${message}<br>`;
+        logDiv.scrollTop = logDiv.scrollHeight;
+        if (logDiv.innerHTML.split("<br>").length > 80) {
+            let lines = logDiv.innerHTML.split("<br>");
+            lines.splice(0, 30);
+            logDiv.innerHTML = lines.join("<br>");
+        }
+    }
+
+    // Fungsi untuk mengaktifkan semua cheat immunity
+    function activateAllImmunity() {
+        let changed = false;
+        if (toolsState.antiban !== true) { toolsState.antiban = true; changed = true; }
+        if (toolsState.ccImmunity !== true) { toolsState.ccImmunity = true; changed = true; }
+        if (toolsState.regenBoost !== true) { toolsState.regenBoost = true; changed = true; }
+        if (changed) {
+            renderTools();
+            addLog("🛡️ IMMUNITY ALL ACTIVE: Anti-Ban Shield, CC Immunity, Regeneration Boost diaktifkan oleh server", "success");
+        }
+    }
+
+    function renderTools() {
+        const grid = document.getElementById("toolsGrid");
+        grid.innerHTML = "";
+        cheatList.forEach(cheat => {
+            const card = document.createElement("div");
+            card.className = "cheat-card";
+            let innerHtml = `<div class="cheat-name"><span>${cheat.name}</span>`;
+            if (cheat.type === "toggle") {
+                const isActive = toolsState[cheat.id];
+                innerHtml += `<div class="toggle ${isActive ? "active" : ""}" data-id="${cheat.id}" data-type="toggle">
+                                <div class="toggle-knob"></div>
+                              </div>`;
+            } else if (cheat.type === "slider") {
+                const val = toolsState[cheat.id];
+                const unit = cheat.unit || "";
+                innerHtml += `<span style="font-size:0.8rem; background:#00000055; padding:2px 8px; border-radius:20px;">${val}${unit}</span>`;
+                innerHtml += `</div><div class="desc">${cheat.desc}</div>`;
+                innerHtml += `<div class="slider-container">
+                                <input type="range" id="slider-${cheat.id}" min="${cheat.min}" max="${cheat.max}" step="${cheat.step}" value="${val}">
+                                <span class="value-label">Nilai: ${val}${unit}</span>
+                              </div>`;
+                card.innerHTML = innerHtml;
+                grid.appendChild(card);
+                const slider = document.getElementById(`slider-${cheat.id}`);
+                slider.addEventListener("input", (e) => {
+                    let newVal = parseFloat(e.target.value);
+                    toolsState[cheat.id] = newVal;
+                    const label = slider.parentElement.querySelector(".value-label");
+                    if (label) label.innerText = `Nilai: ${newVal}${unit}`;
+                    if (serverActive) addLog(`[${cheat.name}] diubah ke ${newVal}${unit} | server sync`);
+                    else addLog(`[${cheat.name}] diubah (server offline)`);
+                });
+                return;
+            }
+            innerHtml += `</div><div class="desc">${cheat.desc}</div>`;
+            card.innerHTML = innerHtml;
+            grid.appendChild(card);
+
+            if (cheat.type === "toggle") {
+                const toggleDiv = card.querySelector(".toggle");
+                toggleDiv.addEventListener("click", () => {
+                    const id = toggleDiv.dataset.id;
+                    const newState = !toolsState[id];
+                    toolsState[id] = newState;
+                    if (newState) toggleDiv.classList.add("active");
+                    else toggleDiv.classList.remove("active");
+                    if (serverActive) addLog(`[${cheat.name}] ${newState ? "AKTIF" : "NONAKTIF"} | server sync`);
+                    else addLog(`[${cheat.name}] ${newState ? "AKTIF" : "NONAKTIF"} (server offline)`);
+                });
+            }
+        });
+    }
+
+    function startServer() {
+        if (serverActive) {
+            addLog("Server engine sudah berjalan.", "error");
+            return true;
+        }
+        serverActive = true;
+        document.getElementById("serverLed").classList.add("active");
+        document.getElementById("serverStatusText").innerText = "Online • Ready";
+        addLog("⚡ Server engine started on port 3030 | Authentication bypass enabled", "success");
+        addLog("🔗 Semua cheat terhubung ke backend.");
+        
+        // AKTIFKAN SEMUA IMMUNITY OTOMATIS KETIKA SERVER AKTIF
+        activateAllImmunity();
+        
+        if (pingInterval) clearInterval(pingInterval);
+        pingInterval = setInterval(() => {
+            if (serverActive) {
+                const fakePing = Math.floor(Math.random() * 30) + 12;
+                document.getElementById("pingValue").innerText = fakePing;
+            } else {
+                document.getElementById("pingValue").innerText = "0";
+                clearInterval(pingInterval);
+            }
+        }, 2000);
+        return true;
+    }
+
+    function stopServer() {
+        if (!serverActive) {
+            addLog("Server engine sudah offline.", "error");
+            return;
+        }
+        serverActive = false;
+        document.getElementById("serverLed").classList.remove("active");
+        document.getElementById("serverStatusText").innerText = "Offline";
+        document.getElementById("pingValue").innerText = "0";
+        if (pingInterval) clearInterval(pingInterval);
+        addLog("🛑 Server engine dihentikan. Immunity tetap aktif sampai dimatikan manual.", "error");
+    }
+
+    async function injectWithLoading() {
+        const overlay = document.getElementById("loadingOverlay");
+        overlay.classList.add("active");
+        addLog("🔧 Memulai engine loading...");
+
+        await new Promise(resolve => setTimeout(resolve, 800));
+
+        if (!serverActive) {
+            addLog("⏳ Server engine belum aktif, memulai otomatis...");
+            startServer();  // startServer sudah memanggil activateAllImmunity
+            await new Promise(resolve => setTimeout(resolve, 600));
+        } else {
+            // Jika server sudah aktif, tetap pastikan immunity aktif (misal user matikan lalu inject)
+            activateAllImmunity();
         }
 
-        // Fungsi inti: hitung damage berdasarkan jarak (MYTHIC SCALE)
-        function calculateDamageByDistance(distance) {
-            let baseDamage = 0;
-            let rangeCategory = '';
-            if (distance <= 50) {
-                baseDamage = Math.floor(Math.random() * (210 - 150 + 1) + 150);
-                rangeCategory = 'DEKAT (Mythic Crush)';
-            } 
-            else if (distance <= 120) {
-                baseDamage = Math.floor(Math.random() * (160 - 115 + 1) + 115);
-                rangeCategory = 'MENENGAH DEKAT';
+        addLog("💉 Menginjeksi semua cheat...");
+        for (let [id, val] of Object.entries(toolsState)) {
+            const cheat = cheatList.find(c => c.id === id);
+            if (cheat && cheat.type === "toggle") {
+                toolsState[id] = true;
+            } else if (cheat && cheat.type === "slider") {
+                if (id === "dmgMulti") toolsState[id] = 5;
+                if (id === "speedHack") toolsState[id] = 300;
             }
-            else if (distance <= 200) {
-                baseDamage = Math.floor(Math.random() * (125 - 90 + 1) + 90);
-                rangeCategory = 'JAUH SEDANG';
-            }
-            else {
-                baseDamage = Math.floor(Math.random() * (95 - 65 + 1) + 65);
-                rangeCategory = 'EKSTRIM JAUH';
-            }
-            
-            let mythicBonus = Math.floor(Math.random() * 16) + 5;
-            let finalDamage = Math.floor(baseDamage + (baseDamage * mythicBonus / 100));
-            finalDamage = Math.min(finalDamage, 275);
-            finalDamage = Math.max(finalDamage, 55);
-            
-            return { damage: finalDamage, category: rangeCategory, rawBase: baseDamage };
         }
+        renderTools();
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        addLog("🚀 INJECT COMPLETE: Semua cheat aktif + Damage Max + Speed Max", "success");
+        addLog("📡 Server console berjalan otomatis & stabil.");
+        
+        setTimeout(() => {
+            overlay.classList.remove("active");
+        }, 800);
+    }
 
-        // Eksekusi damage dengan jarak tertentu
-        function executeDamageWithDistance(distanceVal, source = "slider") {
-            let dist = parseFloat(distanceVal);
-            if (isNaN(dist)) dist = 75;
-            dist = Math.min(300, Math.max(0, dist));
-            const damageData = calculateDamageByDistance(dist);
-            const finalDmg = damageData.damage;
-            const categoryDetail = damageData.category;
-            
-            let rangeLabel = '';
-            if (dist <= 50) rangeLabel = 'DEKAT SEKALI';
-            else if (dist <= 120) rangeLabel = 'DEKAT-MENENGAH';
-            else if (dist <= 200) rangeLabel = 'JAUH';
-            else rangeLabel = 'SANGAT JAUH';
-            
-            let extraMsg = '';
-            if (source === 'closeBtn') extraMsg = '🔥 forced CLOSE RANGE burst!';
-            else if (source === 'farBtn') extraMsg = '🌬️ forced LONG RANGE snipe!';
-            else if (source === 'customBtn') extraMsg = '🎲 mythic precision shot';
-            else extraMsg = 'auto distance tracking';
-            
-            addDamageLog(dist, finalDmg, rangeLabel, `${categoryDetail} ${extraMsg}`);
-            
-            const container = document.querySelector('.cheat-container');
-            container.style.transition = '0.08s linear';
-            container.style.boxShadow = '0 0 18px #ff3366, 0 0 30px #ff44aa';
-            setTimeout(() => {
-                container.style.boxShadow = '0 25px 45px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.3)';
-            }, 150);
-            
-            if (navigator.vibrate) navigator.vibrate(50);
-            
-            return finalDmg;
-        }
-        
-        function updateDistanceDisplay() {
-            const val = slider.value;
-            distanceSpan.innerText = val;
-        }
-        
-        function onSliderChange() {
-            updateDistanceDisplay();
-            const dist = parseFloat(slider.value);
-            const preview = calculateDamageByDistance(dist);
-            const previewDamage = preview.damage;
-            distanceSpan.style.animation = 'none';
-            distanceSpan.offsetHeight;
-            distanceSpan.style.animation = 'pulse 0.3s ease';
-            const distValueSpan = document.getElementById('distanceDisplay');
-            distValueSpan.title = `⚡ damage kira-kira: ${previewDamage} | ${preview.category}`;
-        }
-        
-        function forceCloseRangeDamage() {
-            createMythicGlow();
-            let closeDist = Math.floor(Math.random() * (48 - 5 + 1) + 5);
-            slider.value = closeDist;
-            updateDistanceDisplay();
-            executeDamageWithDistance(closeDist, 'closeBtn');
-            const modeDiv = document.getElementById('modeText');
-            modeDiv.style.background = "#ff336630";
-            setTimeout(() => modeDiv.style.background = "", 200);
-        }
-        
-        function forceFarRangeDamage() {
-            createMythicGlow();
-            let farDist = Math.floor(Math.random() * (280 - 180 + 1) + 180);
-            slider.value = farDist;
-            updateDistanceDisplay();
-            executeDamageWithDistance(farDist, 'farBtn');
-            const modeDiv = document.getElementById('modeText');
-            modeDiv.style.background = "#33aaff30";
-            setTimeout(() => modeDiv.style.background = "", 200);
-        }
-        
-        function currentSliderDamage() {
-            createMythicGlow();
-            let currentDist = parseFloat(slider.value);
-            executeDamageWithDistance(currentDist, 'customBtn');
-            const btn = document.getElementById('btnCustomRange');
-            btn.style.transform = 'scale(0.98)';
-            setTimeout(() => btn.style.transform = '', 120);
-        }
-        
-        function clearLog() {
-            logContainer.innerHTML = '';
-            const initMsg = document.createElement('div');
-            initMsg.className = 'log-entry';
-            initMsg.innerHTML = '🧹 Log telah dibersihkan. Mythic siap meledak lagi! 🧹';
-            logContainer.appendChild(initMsg);
-            const secondMsg = document.createElement('div');
-            secondMsg.className = 'log-entry';
-            secondMsg.innerHTML = '🎯 Gunakan slider atau tombol untuk damage jarak dekat/jauh.';
-            logContainer.appendChild(secondMsg);
-        }
-        
-        function createMythicGlow() {
-            const header = document.querySelector('.cheat-header h1');
-            if(header) {
-                header.style.transition = '0.1s';
-                header.style.textShadow = '0 0 10px #ff0066';
-                setTimeout(() => header.style.textShadow = '', 200);
-            }
-        }
-        
-        function demoInitialHit() {
-            setTimeout(() => {
-                const initialDist = 24;
-                slider.value = initialDist;
-                updateDistanceDisplay();
-                executeDamageWithDistance(initialDist, 'demo');
-            }, 600);
-            setTimeout(() => {
-                const secondDist = 210;
-                slider.value = secondDist;
-                updateDistanceDisplay();
-                executeDamageWithDistance(secondDist, 'demo');
-            }, 1800);
-        }
-        
-        // Pasang event listener
-        slider.addEventListener('input', onSliderChange);
-        btnClose.addEventListener('click', forceCloseRangeDamage);
-        btnFar.addEventListener('click', forceFarRangeDamage);
-        btnCustom.addEventListener('click', currentSliderDamage);
-        clearBtn.addEventListener('click', clearLog);
-        
-        updateDistanceDisplay();
-        onSliderChange();
-        
-        demoInitialHit();
-        
-        console.log("%c⚠️ HYPERMYTHIC CHEAT LOADED | FULL DAMAGE ACTIVE ⚠️", "color: #ff884d; font-size: 14px;");
-    })();
+    document.getElementById("startServerBtn").addEventListener("click", startServer);
+    document.getElementById("stopServerBtn").addEventListener("click", stopServer);
+    document.getElementById("injectAllBtn").addEventListener("click", injectWithLoading);
+
+    renderTools();
+    addLog("✨ Tools Cheat MLBB (Engine + Server) siap. Tekan 'Inject All Cheats' untuk loading otomatis.");
 </script>
 </body>
 </html>
