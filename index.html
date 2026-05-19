@@ -1,526 +1,477 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>ML Cheat - Kill Ping & Damage</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>⚡ HYPERMYTHIC | Roblox Cheat Suite ⚡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* efek "cheat tool" */
+        }
 
-    body {
-      background: #0a0a0a;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-      background-image: radial-gradient(circle at 20% 20%, #2d0a0a, #000000 80%);
-    }
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at 20% 30%, #0a0f1e, #03060c);
+            font-family: 'Poppins', 'Segoe UI', 'Orbitron', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-    .container {
-      width: 100%;
-      max-width: 500px;
-      background: rgba(20, 20, 20, 0.95);
-      backdrop-filter: blur(10px);
-      border: 1px solid #ff2d2d50;
-      border-radius: 28px;
-      box-shadow: 0 20px 50px rgba(255, 0, 0, 0.2), 0 0 0 1px rgba(255, 50, 50, 0.2);
-      padding: 30px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      transition: all 0.3s;
-    }
+        /* efek glitch / high-tech */
+        .cheat-container {
+            max-width: 550px;
+            width: 100%;
+            background: rgba(10, 20, 30, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            border-radius: 48px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.3);
+            padding: 1.8rem 1.5rem 2.2rem;
+            transition: all 0.2s ease;
+        }
 
-    .header {
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
+        /* header mythic */
+        .cheat-header {
+            text-align: center;
+            margin-bottom: 1.8rem;
+        }
+        .cheat-header h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #ffd966, #ff884d, #ff3a6f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 8px rgba(255, 60, 100, 0.5);
+            letter-spacing: 2px;
+        }
+        .badge-mythic {
+            display: inline-block;
+            background: #000000aa;
+            border: 1px solid #f0a;
+            border-radius: 40px;
+            padding: 5px 15px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #ff66cc;
+            margin-top: 8px;
+            backdrop-filter: blur(4px);
+        }
+        .warning-sim {
+            font-size: 0.7rem;
+            color: #ffcc88;
+            margin-top: 8px;
+            background: #0a121ccc;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
 
-    .logo {
-      font-size: 2.8rem;
-      filter: drop-shadow(0 0 12px #ff4d4d);
-      margin-bottom: 5px;
-    }
+        /* jarak slider */
+        .distance-panel {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 2rem;
+            padding: 20px 18px;
+            margin-bottom: 2rem;
+            border: 1px solid #2affb6;
+            box-shadow: 0 0 8px #2affb66f;
+        }
+        .distance-label {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #b5ffec;
+            font-family: monospace;
+            font-size: 1rem;
+        }
+        .distance-value {
+            background: #021018;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-family: 'Orbitron', monospace;
+            color: #0fefef;
+            font-weight: bold;
+            font-size: 1.5rem;
+            text-align: center;
+            margin-top: 8px;
+        }
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            background: linear-gradient(90deg, #00c6ff, #f0f, #ff3a00);
+            border-radius: 10px;
+            outline: none;
+            cursor: pointer;
+        }
+        input[type="range"]:focus {
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            background: #ffffff;
+            border-radius: 50%;
+            border: 2px solid cyan;
+            box-shadow: 0 0 8px cyan;
+            cursor: pointer;
+        }
 
-    h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #ff3b3b, #ff8c8c);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-shadow: 0 0 10px #ff000080;
-      letter-spacing: 1px;
-    }
+        /* damage type button */
+        .action-buttons {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .cheat-btn {
+            background: linear-gradient(145deg, #11171f, #03070c);
+            border: 2px solid rgba(0, 255, 200, 0.6);
+            border-radius: 60px;
+            padding: 14px 28px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            font-family: 'Orbitron', monospace;
+            color: #0ff;
+            cursor: pointer;
+            transition: 0.1s linear;
+            box-shadow: 0 5px 0 #001122;
+            flex: 1;
+            text-align: center;
+        }
+        .cheat-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #001122;
+        }
+        .btn-close {
+            background: linear-gradient(145deg, #1f1018, #2a0a1a);
+            border-color: #ff4080;
+            color: #ff77aa;
+        }
+        .btn-auto {
+            background: linear-gradient(145deg, #002c2c, #001a1a);
+            border-color: #ffcc44;
+            color: #ffff88;
+        }
 
-    .subtitle {
-      color: #bbb;
-      font-size: 0.85rem;
-      font-style: italic;
-      border-bottom: 1px dashed #ff4d4d50;
-      padding-bottom: 5px;
-    }
-
-    .panel {
-      background: #1a1a1a;
-      border-radius: 20px;
-      padding: 20px 18px;
-      border: 1px solid #333;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.7);
-    }
-
-    .feature {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #0f0f0f;
-      border-radius: 14px;
-      padding: 14px 16px;
-      border: 1px solid #2a2a2a;
-    }
-
-    .feature-label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 600;
-      color: #ddd;
-      font-size: 1.1rem;
-    }
-
-    .feature-label span.icon {
-      font-size: 1.6rem;
-    }
-
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 58px;
-      height: 30px;
-    }
-
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #3a3a3a;
-      transition: 0.3s;
-      border-radius: 30px;
-      box-shadow: inset 0 2px 6px rgba(0,0,0,0.5);
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 24px;
-      width: 24px;
-      left: 3px;
-      bottom: 3px;
-      background-color: #ccc;
-      transition: 0.3s;
-      border-radius: 50%;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.4);
-    }
-
-    input:checked + .slider {
-      background-color: #ff2d2d;
-      box-shadow: 0 0 15px #ff2d2d;
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(28px);
-      background-color: #fff;
-    }
-
-    .slider-text {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 0.7rem;
-      font-weight: bold;
-      color: #fff;
-      pointer-events: none;
-    }
-
-    .slider-text.off {
-      left: 8px;
-      opacity: 1;
-      transition: 0.2s;
-    }
-
-    .slider-text.on {
-      right: 8px;
-      opacity: 0;
-      transition: 0.2s;
-      color: #ffe0e0;
-    }
-
-    input:checked ~ .slider-text.off {
-      opacity: 0;
-    }
-
-    input:checked ~ .slider-text.on {
-      opacity: 1;
-    }
-
-    .damage-control {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-    }
-
-    .damage-label {
-      font-weight: 600;
-      color: #ffbbbb;
-      font-size: 1rem;
-    }
-
-    input[type=range] {
-      width: 120px;
-      accent-color: #ff2d2d;
-      height: 8px;
-      border-radius: 5px;
-      background: #2a2a2a;
-    }
-
-    .damage-value {
-      background: #ff2d2d20;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-weight: bold;
-      color: #ff6b6b;
-      min-width: 60px;
-      text-align: center;
-      border: 1px solid #ff2d2d60;
-    }
-
-    .execute-btn {
-      background: linear-gradient(145deg, #b71c1c, #d32f2f);
-      border: none;
-      border-radius: 40px;
-      padding: 16px 20px;
-      font-weight: 800;
-      font-size: 1.2rem;
-      letter-spacing: 1px;
-      color: white;
-      text-transform: uppercase;
-      box-shadow: 0 10px 20px rgba(255, 0, 0, 0.4), 0 0 15px #ff0000;
-      cursor: pointer;
-      transition: all 0.25s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      border: 1px solid #ff6666;
-    }
-
-    .execute-btn:hover {
-      background: linear-gradient(145deg, #d32f2f, #e53935);
-      box-shadow: 0 15px 25px rgba(255, 0, 0, 0.6), 0 0 25px #ff4d4d;
-      transform: scale(1.02);
-    }
-
-    .execute-btn:active {
-      transform: scale(0.97);
-    }
-
-    .execute-btn:disabled {
-      opacity: 0.5;
-      filter: grayscale(30%);
-      pointer-events: none;
-    }
-
-    .console {
-      background: #0b0b0b;
-      border-radius: 16px;
-      border: 1px solid #444;
-      padding: 15px;
-      font-family: 'Courier New', monospace;
-      color: #0f0;
-      font-size: 0.9rem;
-      height: 130px;
-      overflow-y: auto;
-      box-shadow: inset 0 0 20px #000000;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .log-line {
-      display: flex;
-      gap: 6px;
-    }
-
-    .log-time {
-      color: #888;
-    }
-
-    .log-text {
-      color: #adff2f;
-    }
-
-    .log-error {
-      color: #ff6b6b;
-    }
-
-    .progress-container {
-      width: 100%;
-      height: 8px;
-      background: #222;
-      border-radius: 10px;
-      margin: 10px 0 5px;
-      overflow: hidden;
-      display: none;
-    }
-
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #ff2d2d, #ff8c8c);
-      border-radius: 10px;
-      box-shadow: 0 0 20px #ff0000;
-      transition: width 0.1s ease;
-    }
-
-    .footer-note {
-      font-size: 0.7rem;
-      color: #555;
-      text-align: center;
-      margin-top: 4px;
-      border-top: 1px solid #2a2a2a;
-      padding-top: 12px;
-    }
-  </style>
+        /* console damage log */
+        .damage-log {
+            background: #03070cee;
+            border-radius: 24px;
+            padding: 15px;
+            margin-top: 20px;
+            border-left: 6px solid #f0f;
+            font-family: 'Courier New', monospace;
+        }
+        .log-title {
+            font-size: 0.8rem;
+            color: #aaecff;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .log-area {
+            background: #000000aa;
+            border-radius: 18px;
+            padding: 12px;
+            height: 160px;
+            overflow-y: auto;
+            font-size: 0.8rem;
+            color: #b3ffcf;
+        }
+        .log-entry {
+            border-bottom: 1px solid #1a4450;
+            padding: 6px 0;
+            font-family: monospace;
+        }
+        .highlight-damage {
+            color: #ff7e5e;
+            font-weight: bold;
+            text-shadow: 0 0 3px red;
+        }
+        .mode-indicator {
+            background: #0e1a1f;
+            border-radius: 24px;
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: cyan;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.65rem;
+            color: #3a6a7a;
+            margin-top: 20px;
+        }
+        button {
+            background: none;
+            border: none;
+        }
+        .glow-text {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.7; text-shadow: 0 0 0px cyan;}
+            100% { opacity: 1; text-shadow: 0 0 4px cyan;}
+        }
+        .damage-stat {
+            font-size: 0.75rem;
+            background: #00000066;
+            border-radius: 20px;
+            padding: 5px 10px;
+            display: inline-block;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <div class="logo">🎮💀</div>
-      <h1>ML CHEAT TOOL</h1>
-      <div class="subtitle">Kill Ping & Damage Hack v4.2</div>
+<div class="cheat-container">
+    <div class="cheat-header">
+        <h1>✦ HYPERMYTHIC CHEAT ✦</h1>
+        <div class="badge-mythic">⚡ ROBLOX | HYPERSHOT | MYTHIC EDITION ⚡</div>
+        <div class="warning-sim">⚡ MYTHIC ACTIVE • FULL DAMAGE CONTROL ⚡</div>
     </div>
 
-    <div class="panel">
-      <div class="feature">
-        <div class="feature-label">
-          <span class="icon">📶</span> Kill Ping Lawan
+    <!-- kontrol jarak utama -->
+    <div class="distance-panel">
+        <div class="distance-label">
+            <span>🔫 JARAK TARGET :</span>
+            <span>📏 meter</span>
         </div>
-        <label class="switch">
-          <input type="checkbox" id="killPingToggle">
-          <span class="slider"></span>
-          <span class="slider-text off">OFF</span>
-          <span class="slider-text on">ON</span>
-        </label>
-      </div>
-
-      <div class="feature">
-        <div class="feature-label">
-          <span class="icon">⚔️</span> Damage Multiplier
+        <input type="range" id="distanceSlider" min="0" max="300" value="75" step="1">
+        <div class="distance-value">
+            <span id="distanceDisplay">75</span> m
         </div>
-        <div class="damage-control">
-          <input type="range" id="damageSlider" min="2" max="20" value="5" step="0.5">
-          <span class="damage-value" id="damageDisplay">x5.0</span>
+        <div class="damage-stat" style="margin-top: 12px; display: flex; justify-content: space-between;">
+            <span>💥 DAMAGE CLOSE: <strong style="color:#ffaa55">130-210</strong></span>
+            <span>💢 DAMAGE FAR: <strong style="color:#88ffaa">85-155</strong></span>
         </div>
-      </div>
-
-      <div class="progress-container" id="progressContainer">
-        <div class="progress-bar" id="progressBar"></div>
-      </div>
-
-      <button class="execute-btn" id="executeBtn">
-        <span>🔥</span> AKTIFKAN CHEAT <span>🔥</span>
-      </button>
-
-      <div class="console" id="console">
-        <div class="log-line">
-          <span class="log-time">[SYS]</span>
-          <span class="log-text">Menunggu perintah...</span>
-        </div>
-      </div>
     </div>
 
-    <div class="footer-note">
-      🔒 Koneksi terenkripsi | Server aktif
+    <!-- mode + fitur -->
+    <div class="mode-indicator" id="modeText">
+        🧬 MODE MYTHIC ACTIVE : DAMAGE TERGANTUNG JARAK (OTOMATIS SCALE)
     </div>
-  </div>
 
-  <script>
-    (function () {
-      const killPingToggle = document.getElementById('killPingToggle');
-      const damageSlider = document.getElementById('damageSlider');
-      const damageDisplay = document.getElementById('damageDisplay');
-      const executeBtn = document.getElementById('executeBtn');
-      const progressContainer = document.getElementById('progressContainer');
-      const progressBar = document.getElementById('progressBar');
-      const consoleEl = document.getElementById('console');
+    <div class="action-buttons">
+        <button class="cheat-btn" id="btnCloseRange">⚡ DEKAT ⚡</button>
+        <button class="cheat-btn btn-auto" id="btnFarRange">🌠 JAUH 🌠</button>
+        <button class="cheat-btn btn-close" id="btnCustomRange">🎯 DAMAGE SEKARANG 🎯</button>
+    </div>
 
-      let isExecuting = false;
+    <!-- log damage & riwayat -->
+    <div class="damage-log">
+        <div class="log-title">
+            <span>📟 [ MYTHIC DAMAGE LOG ]</span>
+            <span style="font-size:10px;">● REAL-TIME HIT</span>
+        </div>
+        <div class="log-area" id="logMessages">
+            <div class="log-entry">✨ HYPERMYTHIC ACTIVE — siap menghantam jarak dekat & jauh ✨</div>
+            <div class="log-entry">🎯 geser slider jarak atau tekan tombol spesial</div>
+        </div>
+        <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+            <button id="clearLogBtn" style="background:#111e24; border:none; padding:4px 12px; border-radius:20px; color:#6f9fbf; font-size:11px; cursor:pointer;">🗑️ Bersihkan Log</button>
+        </div>
+    </div>
+    <footer>
+        ⚡ HYPERMYTHIC CHEAT SUITE | ROBLOX INTEGRATED ⚡<br>
+        * Jarak dekat (0-50m) damage max | Jarak menengah (51-150m) damage medium | Jarak jauh (151-300m) damage lebih rendah
+    </footer>
+</div>
 
-      damageSlider.addEventListener('input', (e) => {
-        const val = parseFloat(e.target.value).toFixed(1);
-        damageDisplay.textContent = `x${val}`;
-      });
+<script>
+    (function() {
+        // Elemen DOM
+        const slider = document.getElementById('distanceSlider');
+        const distanceSpan = document.getElementById('distanceDisplay');
+        const btnClose = document.getElementById('btnCloseRange');
+        const btnFar = document.getElementById('btnFarRange');
+        const btnCustom = document.getElementById('btnCustomRange');
+        const logContainer = document.getElementById('logMessages');
+        const clearBtn = document.getElementById('clearLogBtn');
 
-      function addLog(message, type = 'info') {
-        const line = document.createElement('div');
-        line.className = 'log-line';
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString('id-ID', { hour12: false });
-        const timeSpan = document.createElement('span');
-        timeSpan.className = 'log-time';
-        timeSpan.textContent = `[${timeStr}]`;
-        const textSpan = document.createElement('span');
-        textSpan.className = type === 'error' ? 'log-error' : 'log-text';
-        textSpan.textContent = message;
-        line.appendChild(timeSpan);
-        line.appendChild(textSpan);
-        consoleEl.appendChild(line);
-        consoleEl.scrollTop = consoleEl.scrollHeight;
-        if (consoleEl.children.length > 8) {
-          consoleEl.removeChild(consoleEl.children[0]);
+        // Fungsi untuk menambah log damage
+        function addDamageLog(distanceVal, damageDealt, rangeType, extra = '') {
+            const logDiv = document.createElement('div');
+            logDiv.className = 'log-entry';
+            const timestamp = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute:'2-digit', second:'2-digit' });
+            let rangeIcon = (rangeType === 'DEKAT') ? '🔴⚡' : (rangeType === 'JAUH') ? '🔵✨' : '💠🎯';
+            logDiv.innerHTML = `<span style="color:#9bc4d0;">[${timestamp}]</span> ${rangeIcon} <strong style="color:#fff;">[${rangeType}]</strong> Jarak: <span style="color:#00ffc3;">${distanceVal}m</span> → 💥 DAMAGE: <span class="highlight-damage">${damageDealt}</span> HP ${extra ? '('+extra+')' : ''}`;
+            logContainer.appendChild(logDiv);
+            logContainer.scrollTop = logContainer.scrollHeight;
         }
-      }
 
-      // Fungsi buka Mobile Legends langsung (Android)
-      function openMobileLegends() {
-        const ua = navigator.userAgent || '';
-        if (/android/i.test(ua)) {
-          // Coba buka langsung lewat skema mlbb://
-          const startTime = Date.now();
-          window.location.href = 'mlbb://';
-
-          // Fallback ke Play Store jika aplikasi tidak terpasang (setelah 2 detik)
-          setTimeout(() => {
-            // Hanya redirect jika halaman masih terlihat (tidak berpindah ke aplikasi)
-            if (document.hidden === false && Date.now() - startTime < 2200) {
-              window.location.href = 'market://details?id=com.mobile.legends';
+        // Fungsi inti: hitung damage berdasarkan jarak (MYTHIC SCALE)
+        function calculateDamageByDistance(distance) {
+            let baseDamage = 0;
+            let rangeCategory = '';
+            if (distance <= 50) {
+                baseDamage = Math.floor(Math.random() * (210 - 150 + 1) + 150);
+                rangeCategory = 'DEKAT (Mythic Crush)';
+            } 
+            else if (distance <= 120) {
+                baseDamage = Math.floor(Math.random() * (160 - 115 + 1) + 115);
+                rangeCategory = 'MENENGAH DEKAT';
             }
-          }, 2000);
-        } else {
-          // Untuk desktop atau iOS, beri pesan manual
-          addLog("ℹ️ Silakan buka Mobile Legends secara manual di perangkat Anda.");
+            else if (distance <= 200) {
+                baseDamage = Math.floor(Math.random() * (125 - 90 + 1) + 90);
+                rangeCategory = 'JAUH SEDANG';
+            }
+            else {
+                baseDamage = Math.floor(Math.random() * (95 - 65 + 1) + 65);
+                rangeCategory = 'EKSTRIM JAUH';
+            }
+            
+            let mythicBonus = Math.floor(Math.random() * 16) + 5;
+            let finalDamage = Math.floor(baseDamage + (baseDamage * mythicBonus / 100));
+            finalDamage = Math.min(finalDamage, 275);
+            finalDamage = Math.max(finalDamage, 55);
+            
+            return { damage: finalDamage, category: rangeCategory, rawBase: baseDamage };
         }
-      }
 
-      function simulateProgress(duration = 2500, callback) {
-        progressContainer.style.display = 'block';
-        progressBar.style.width = '0%';
-        let start = null;
-        function step(timestamp) {
-          if (!start) start = timestamp;
-          const elapsed = timestamp - start;
-          const progress = Math.min(elapsed / duration, 1);
-          progressBar.style.width = (progress * 100) + '%';
-          if (progress < 1) {
-            window.requestAnimationFrame(step);
-          } else {
-            if (callback) callback();
+        // Eksekusi damage dengan jarak tertentu
+        function executeDamageWithDistance(distanceVal, source = "slider") {
+            let dist = parseFloat(distanceVal);
+            if (isNaN(dist)) dist = 75;
+            dist = Math.min(300, Math.max(0, dist));
+            const damageData = calculateDamageByDistance(dist);
+            const finalDmg = damageData.damage;
+            const categoryDetail = damageData.category;
+            
+            let rangeLabel = '';
+            if (dist <= 50) rangeLabel = 'DEKAT SEKALI';
+            else if (dist <= 120) rangeLabel = 'DEKAT-MENENGAH';
+            else if (dist <= 200) rangeLabel = 'JAUH';
+            else rangeLabel = 'SANGAT JAUH';
+            
+            let extraMsg = '';
+            if (source === 'closeBtn') extraMsg = '🔥 forced CLOSE RANGE burst!';
+            else if (source === 'farBtn') extraMsg = '🌬️ forced LONG RANGE snipe!';
+            else if (source === 'customBtn') extraMsg = '🎲 mythic precision shot';
+            else extraMsg = 'auto distance tracking';
+            
+            addDamageLog(dist, finalDmg, rangeLabel, `${categoryDetail} ${extraMsg}`);
+            
+            const container = document.querySelector('.cheat-container');
+            container.style.transition = '0.08s linear';
+            container.style.boxShadow = '0 0 18px #ff3366, 0 0 30px #ff44aa';
             setTimeout(() => {
-              progressContainer.style.display = 'none';
-              progressBar.style.width = '0%';
-            }, 400);
-          }
+                container.style.boxShadow = '0 25px 45px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.3)';
+            }, 150);
+            
+            if (navigator.vibrate) navigator.vibrate(50);
+            
+            return finalDmg;
         }
-        window.requestAnimationFrame(step);
-      }
-
-      function executeCheat() {
-        if (isExecuting) {
-          addLog("⛔ Proses sedang berjalan, harap tunggu...", "error");
-          return;
+        
+        function updateDistanceDisplay() {
+            const val = slider.value;
+            distanceSpan.innerText = val;
         }
-
-        const pingActive = killPingToggle.checked;
-        const damageVal = parseFloat(damageSlider.value).toFixed(1);
-
-        if (!pingActive && damageVal <= 1.0) {
-          addLog("❌ Aktifkan minimal satu cheat (Kill Ping atau Damage > x1)", "error");
-          return;
+        
+        function onSliderChange() {
+            updateDistanceDisplay();
+            const dist = parseFloat(slider.value);
+            const preview = calculateDamageByDistance(dist);
+            const previewDamage = preview.damage;
+            distanceSpan.style.animation = 'none';
+            distanceSpan.offsetHeight;
+            distanceSpan.style.animation = 'pulse 0.3s ease';
+            const distValueSpan = document.getElementById('distanceDisplay');
+            distValueSpan.title = `⚡ damage kira-kira: ${previewDamage} | ${preview.category}`;
         }
-
-        isExecuting = true;
-        executeBtn.disabled = true;
-        addLog("🔍 Mendeteksi proses Mobile Legends...");
-
-        setTimeout(() => {
-          addLog("📡 Menghubungkan ke server cheat...");
-        }, 600);
-
-        setTimeout(() => {
-          addLog("🔐 Autentikasi berhasil, memuat modul...");
-        }, 1200);
-
-        setTimeout(() => {
-          simulateProgress(2800, () => {
-            if (pingActive) {
-              addLog("💀 Ping lawan berhasil dimatikan!");
+        
+        function forceCloseRangeDamage() {
+            createMythicGlow();
+            let closeDist = Math.floor(Math.random() * (48 - 5 + 1) + 5);
+            slider.value = closeDist;
+            updateDistanceDisplay();
+            executeDamageWithDistance(closeDist, 'closeBtn');
+            const modeDiv = document.getElementById('modeText');
+            modeDiv.style.background = "#ff336630";
+            setTimeout(() => modeDiv.style.background = "", 200);
+        }
+        
+        function forceFarRangeDamage() {
+            createMythicGlow();
+            let farDist = Math.floor(Math.random() * (280 - 180 + 1) + 180);
+            slider.value = farDist;
+            updateDistanceDisplay();
+            executeDamageWithDistance(farDist, 'farBtn');
+            const modeDiv = document.getElementById('modeText');
+            modeDiv.style.background = "#33aaff30";
+            setTimeout(() => modeDiv.style.background = "", 200);
+        }
+        
+        function currentSliderDamage() {
+            createMythicGlow();
+            let currentDist = parseFloat(slider.value);
+            executeDamageWithDistance(currentDist, 'customBtn');
+            const btn = document.getElementById('btnCustomRange');
+            btn.style.transform = 'scale(0.98)';
+            setTimeout(() => btn.style.transform = '', 120);
+        }
+        
+        function clearLog() {
+            logContainer.innerHTML = '';
+            const initMsg = document.createElement('div');
+            initMsg.className = 'log-entry';
+            initMsg.innerHTML = '🧹 Log telah dibersihkan. Mythic siap meledak lagi! 🧹';
+            logContainer.appendChild(initMsg);
+            const secondMsg = document.createElement('div');
+            secondMsg.className = 'log-entry';
+            secondMsg.innerHTML = '🎯 Gunakan slider atau tombol untuk damage jarak dekat/jauh.';
+            logContainer.appendChild(secondMsg);
+        }
+        
+        function createMythicGlow() {
+            const header = document.querySelector('.cheat-header h1');
+            if(header) {
+                header.style.transition = '0.1s';
+                header.style.textShadow = '0 0 10px #ff0066';
+                setTimeout(() => header.style.textShadow = '', 200);
             }
-            if (damageVal > 1.0) {
-              addLog("⚡ Damage multiplier x" + damageVal + " aktif!");
-            }
-            addLog("✅ Cheat berhasil diaktifkan! Semua fitur berjalan.");
-            addLog("🟢 Status: Terhubung & Aktif");
-
-            // Buka Mobile Legends langsung
-            addLog("📱 Membuka Mobile Legends...");
+        }
+        
+        function demoInitialHit() {
             setTimeout(() => {
-              openMobileLegends();
-            }, 800);
-
-            isExecuting = false;
-            executeBtn.disabled = false;
-          });
-        }, 1800);
-      }
-
-      executeBtn.addEventListener('click', executeCheat);
-
-      setTimeout(() => {
-        addLog("🟢 Server online, siap menerima perintah.");
-        addLog("🔧 Pilih cheat lalu tekan 'AKTIFKAN CHEAT'");
-      }, 300);
-
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && document.activeElement !== damageSlider && !isExecuting) {
-          e.preventDefault();
-          executeCheat();
+                const initialDist = 24;
+                slider.value = initialDist;
+                updateDistanceDisplay();
+                executeDamageWithDistance(initialDist, 'demo');
+            }, 600);
+            setTimeout(() => {
+                const secondDist = 210;
+                slider.value = secondDist;
+                updateDistanceDisplay();
+                executeDamageWithDistance(secondDist, 'demo');
+            }, 1800);
         }
-      });
-
-      killPingToggle.addEventListener('change', () => {
-        if (killPingToggle.checked && parseFloat(damageSlider.value) >= 10) {
-          addLog("💥 Kombo mematikan! Ping + Damage ekstrem siap digunakan.");
-        }
-      });
-
-      damageSlider.addEventListener('change', () => {
-        if (killPingToggle.checked && parseFloat(damageSlider.value) >= 15) {
-          addLog("🔥 Damage maksimum! Musuh akan lenyap dalam sekejap.");
-        }
-      });
+        
+        // Pasang event listener
+        slider.addEventListener('input', onSliderChange);
+        btnClose.addEventListener('click', forceCloseRangeDamage);
+        btnFar.addEventListener('click', forceFarRangeDamage);
+        btnCustom.addEventListener('click', currentSliderDamage);
+        clearBtn.addEventListener('click', clearLog);
+        
+        updateDistanceDisplay();
+        onSliderChange();
+        
+        demoInitialHit();
+        
+        console.log("%c⚠️ HYPERMYTHIC CHEAT LOADED | FULL DAMAGE ACTIVE ⚠️", "color: #ff884d; font-size: 14px;");
     })();
-  </script>
+</script>
 </body>
 </html>
